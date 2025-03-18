@@ -32,16 +32,17 @@ For more information on Kusto queries and performance monitoring, check out the 
 We encourage users to provide feedback on their experiences with monitoring AI agent performance. Your insights can help improve the documentation and the overall project. You can reach us at feedback@example.com or fill out our [feedback form](https://example.com/feedback).
 
 ### Visual Aids
-Consider adding diagrams or flowcharts to illustrate how Kusto queries fit into the overall monitoring process.
+This document will include diagrams or flowcharts to illustrate how Kusto queries fit into the overall monitoring process.
 
 ### Real-World Use Cases
-Include specific scenarios where monitoring AI agent performance has led to significant improvements, providing practical insights for users.
+This section will include specific scenarios where monitoring AI agent performance has led to significant improvements, providing practical insights for users.
 
 ### Expanded FAQs Section
-Address common questions related to performance monitoring, such as how to interpret specific metrics or what to do if performance is below expectations.
+This section will address common questions related to performance monitoring, such as how to interpret specific metrics or what to do if performance is below expectations.
 
 ### Best Practices
-Add a section on best practices for monitoring AI agents, including tips on setting up alerts, regular review of performance metrics, and optimizing queries for better performance.
+This section will provide best practices for monitoring AI agents, including tips on setting up alerts, regular review of performance metrics, and optimizing queries for better performance.
+
 
 
 Monitoring the performance of AI agents is crucial for ensuring they operate efficiently and effectively. By analyzing requests and responses, you can identify potential issues, optimize performance, and enhance user experience.
