@@ -55,7 +55,58 @@ Instead of navigating through traditional web interfaces and menus, users can si
 
 Invoices samples are included in the data folder to make it easy to explore payments feature. The payment agent equipped with OCR tools ( Azure Document Intelligence) will lead the conversation with the user to extract the invoice data and initiate the payment process. Other account fake data as transactions, payment methods and account balance are also available to be queried by the user. All data and services are exposed as external REST APIs and consumed by the agents to provide the user with the requested information.
 
-## Features 
+## Monitoring AI Agent Performance
+
+This section provides guidance on how to monitor the performance of AI agents within the application. 
+
+### Application Insights
+Application Insights is enabled by default in this project. It allows you to investigate each request tracing along with the logging of errors. To see the performance data, go to the Application Insights resource in your resource group, click on the "Investigate -> Performance" blade, and navigate to any HTTP request to see the timing data.
+
+### Kusto Queries for Performance Monitoring
+The following Kusto queries can be used to inspect the performance of AI agents by analyzing Azure OpenAI requests and responses:
+
+#### Inspect all Azure Open AI responses
+```kusto
+traces
+| where cloud_RoleName == "copilot-api"
+| where message contains "openai.azure.com/openai/deployments"
+| extend chatmessage=parse_json(message)
+| where chatmessage["az.sdk.message"] == "HTTP response"
+| extend chatbody=parse_json(tostring(chatmessage.body)).choices[0]
+```
+
+#### Inspect all Azure Open AI requests
+```kusto
+traces 
+| where cloud_RoleName == "copilot-api"
+| where message contains "openai.azure.com/openai/deployments"
+| extend chatrequest=parse_json(message)
+| where chatrequest.method == "POST" 
+| extend chatbody=parse_json(tostring(parse_json(message).body))
+```
+
+#### Inspect all tools calls requests
+```kusto
+traces
+| where cloud_RoleName == "copilot-api"
+| where message contains "openai.azure.com/openai/deployments"
+| extend chatrequest=parse_json(message)
+| where chatrequest["az.sdk.message"] == "HTTP response"
+| extend response=parse_json(tostring(parse_json(tostring(chatrequest.body)))).choices[0]
+| where response.finish_reason=="tool_calls"
+| extend tool_calls=parse_json(tostring(parse_json(tostring(response.message)).tool_calls))
+```
+
+#### Inspect all tools calls requests for TransactionHistoryPlugin function
+```kusto
+traces 
+| where cloud_RoleName == "copilot-api"
+| where message contains "openai.azure.com/openai/deployments"
+| extend chatrequest=parse_json(message)
+| where chatrequest["az.sdk.message"] == "HTTP response" 
+| extend response=parse_json(tostring(parse_json(tostring(chatrequest.body)))).choices[0]
+| where response.finish_reason=="tool_calls" //and response.message contains "TransactionHistoryPlugin"
+| extend tool_calls=parse_json(tostring(parse_json(tostring(response.message)).tool_calls))
 This project provides the following features and technical patterns:
  - Simple multi ai agents Java implementation using *gpt-4o-mini* on Azure Open AI.
  - Chat intent extraction and agent routing.
